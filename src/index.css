@@ -1,0 +1,31 @@
+:root {
+	--bg: #f7f7f5;
+	--surface: #ffffff;
+	--border: #d8d5cc;
+	--text: #1f2328;
+	--muted: #5c6169;
+	--accent: #2f6f4f;
+	--warning: #b3261e;
+
+	color-scheme: light;
+	font-family: system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
+	font-size: 16px;
+	line-height: 1.7;
+	color: var(--text);
+	background: var(--bg);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+}
+
+.app {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 24px 16px 64px;
+}
