@@ -13,7 +13,9 @@ export function normalizeKana(input: string): string {
 	return input
 		.normalize("NFC")
 		.replace(/\r\n?/g, "\n")
-		.replace(/[　\t]/g, " ");
+		.replace(/[　\t]/g, " ")
+		.replace(/\?/g, "？")
+		.replace(/!/g, "！");
 }
 
 // ja: ひらがな列をハンター文字のトークン列へ分解する。未対応文字も落とさず持ち回る。

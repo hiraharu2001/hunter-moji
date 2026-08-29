@@ -11,13 +11,15 @@ import type { GlyphToken } from "../lib/tokens";
 const strokeProps = {
 	fill: "none",
 	stroke: "currentColor",
-	strokeWidth: 6,
 	strokeLinecap: "round",
 	strokeLinejoin: "round",
 } as const;
 
-// ja: 小書きは同じ字形を 0.6 倍にして左下寄りに置く。
-const SMALL_TRANSFORM = "translate(20 32) scale(0.6)";
+const STROKE_WIDTH = 6;
+
+// ja: 小書きは同じ字形を縮めて右下へ寄せる。線の太さは縮小の逆数で戻し、基字とそろえる。
+const SMALL_SCALE = 0.62;
+const SMALL_TRANSFORM = `translate(34 30) scale(${SMALL_SCALE})`;
 
 type Props = {
 	token: GlyphToken;
@@ -30,16 +32,38 @@ export function GlyphShape({ token }: Props) {
 		return null;
 	}
 	const mark = markGlyph(token.diacritic);
+	const strokeWidth = token.small ? STROKE_WIDTH / SMALL_SCALE : STROKE_WIDTH;
 
 	return (
 		<>
 			<g transform={token.small ? SMALL_TRANSFORM : undefined}>
-				{glyph.paths.map((path) => (
-					<path key={path} d={path} {...strokeProps} />
-				))}
+				<GlyphParts glyph={glyph} strokeWidth={strokeWidth} />
 			</g>
-			{mark?.paths.map((path) => (
-				<path key={path} d={path} {...strokeProps} />
+			{mark !== null && <GlyphParts glyph={mark} strokeWidth={STROKE_WIDTH} />}
+		</>
+	);
+}
+
+function GlyphParts({
+	glyph,
+	strokeWidth,
+}: {
+	glyph: Glyph;
+	strokeWidth: number;
+}) {
+	return (
+		<>
+			{glyph.paths.map((path) => (
+				<path key={path} d={path} strokeWidth={strokeWidth} {...strokeProps} />
+			))}
+			{glyph.dots?.map((dot) => (
+				<circle
+					key={`${dot.cx}-${dot.cy}-${dot.r}`}
+					cx={dot.cx}
+					cy={dot.cy}
+					r={dot.r}
+					fill="currentColor"
+				/>
 			))}
 		</>
 	);
