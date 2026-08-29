@@ -36,8 +36,8 @@ export default function App() {
 			</main>
 			<footer className="app__footer">
 				<p>
-					字形は omniglot
-					のハンター文字対応表を参照して作画しています。「、」「。」「？」「！」は対応表に無いため独自定義です。
+					字形は日本テレビ公式サイトの用語解説にあるハンター文字表（omniglot
+					の対応表とも一致）を正本として作画しています。「、」「。」は対応表に無いため独自定義です。
 				</p>
 			</footer>
 		</div>
