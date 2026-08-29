@@ -33,7 +33,7 @@ export function ChartView() {
 			</div>
 			<h3 className="view__subtitle">濁音・半濁音</h3>
 			<p className="view__note">
-				基字の右上に濁点・半濁点のマークを重ねて表します。
+				基字の右下に濁点（●）・半濁点（○）を添えて表します。
 			</p>
 			<div className="chart chart--flow">
 				{[
@@ -44,7 +44,7 @@ export function ChartView() {
 				))}
 			</div>
 			<h3 className="view__subtitle">小書き</h3>
-			<p className="view__note">同じ字形を縮小して表します。</p>
+			<p className="view__note">同じ字形を縮小して右下に寄せて表します。</p>
 			<div className="chart chart--flow">
 				{Object.keys(SMALL_TO_BASE).map((char) => (
 					<ChartCell char={char} key={char} />
