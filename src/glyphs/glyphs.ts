@@ -1,7 +1,8 @@
 import type { Glyph } from "./types";
 
-// ja: 字形は omniglot のハンター文字対応表（https://www.omniglot.com/images/writing/hunter.gif）を
-// ja: 見ながら書き起こした。段（母音）ごとに基本形が決まり、行（子音）ごとに足す要素が変わる。
+// ja: 字形は日本テレビ公式サイト「用語解説」のハンター文字表
+// ja: （https://www.ntv.co.jp/hunterhunter/dictionary/index.html）を正本として書き起こした。
+// ja: 段（母音）ごとに基本形が決まり、行（子音）ごとに足す要素が変わる。
 // ja: あ段=ラテン文字の回転／反転、い段=●と線、う段=∩などの曲線、え段=三角、お段=円。
 //
 // ja: 座標系は viewBox "0 0 100 100"。基字は x=12〜78・y=12〜84 に収め、
@@ -10,7 +11,7 @@ import type { Glyph } from "./types";
 export const glyphs: Glyph[] = [
 	{
 		char: "あ",
-		paths: ["M14 16 L76 16 L45 82 Z", "M28 46 L62 46"],
+		paths: ["M14 16 L45 82 L76 16", "M25 39 L65 39"],
 	},
 	{
 		char: "い",
@@ -31,7 +32,7 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "か",
-		paths: ["M16 16 L45 78 L74 16", "M14 78 L76 78"],
+		paths: ["M16 16 L45 78 L74 16", "M20 78 L70 78"],
 	},
 	{
 		char: "き",
@@ -49,14 +50,14 @@ export const glyphs: Glyph[] = [
 	{
 		char: "こ",
 		paths: [
-			"M14 76 L14 16 L74 16 L74 52",
+			"M14 62 L14 16 L74 16 L74 52",
 			"M36 62 A20 20 0 1 1 76 62 A20 20 0 1 1 36 62",
 		],
 	},
 	{
 		char: "さ",
 		paths: [
-			"M18 16 L18 50 A14 14 0 0 0 46 50 L46 36 A14 14 0 0 1 74 36 L74 78",
+			"M18 16 L18 66 A14 14 0 0 0 46 66 L46 30 A14 14 0 0 1 74 30 L74 80",
 		],
 	},
 	{
@@ -66,7 +67,7 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "す",
-		paths: ["M16 18 L46 18 A26 32 0 0 1 46 82 L16 82", "M46 18 L76 82"],
+		paths: ["M16 18 L38 18 A68 68 0 0 1 45 80 L16 80", "M38 18 L71 82"],
 	},
 	{
 		char: "せ",
@@ -98,7 +99,7 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "て",
-		paths: ["M14 16 L76 16", "M16 30 L74 30 L45 82 Z"],
+		paths: ["M19 16 L71 16", "M16 30 L74 30 L45 82 Z"],
 	},
 	{
 		char: "と",
@@ -125,7 +126,7 @@ export const glyphs: Glyph[] = [
 		char: "の",
 		paths: [
 			"M16 38 A20 20 0 1 1 56 38 A20 20 0 1 1 16 38",
-			"M74 20 L74 66 A12 12 0 0 1 62 78 L16 78",
+			"M74 30 L74 66 A12 12 0 0 1 62 78 L16 78",
 		],
 	},
 	{
@@ -135,15 +136,15 @@ export const glyphs: Glyph[] = [
 	{
 		char: "ひ",
 		paths: ["M18 16 L18 78 L74 78"],
-		dots: [{ cx: 36, cy: 34, r: 15 }],
+		dots: [{ cx: 47, cy: 33, r: 15 }],
 	},
 	{
 		char: "ふ",
-		paths: ["M16 18 L46 18 A26 32 0 0 1 46 82 L16 82"],
+		paths: ["M16 18 L64 18 A49 49 0 0 1 64 82 L16 82"],
 	},
 	{
 		char: "へ",
-		paths: ["M14 18 L76 18", "M45 18 L74 80 L16 80 Z"],
+		paths: ["M14 16 L76 16", "M45 32 L74 82 L16 82 Z"],
 	},
 	{
 		char: "ほ",
@@ -172,12 +173,8 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "も",
-		paths: [
-			"M30 66 A15 15 0 1 1 60 66 A15 15 0 1 1 30 66",
-			"M45 14 L45 51",
-			"M16 24 L74 24",
-			"M16 38 L74 38",
-		],
+		paths: ["M45 14 L45 50", "M16 24 L74 24", "M16 38 L74 38"],
+		dots: [{ cx: 45, cy: 66, r: 16 }],
 	},
 	{
 		char: "や",
@@ -189,7 +186,7 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "よ",
-		paths: ["M32 26 A13 13 0 1 1 58 26 A13 13 0 1 1 32 26", "M45 39 L45 82"],
+		paths: ["M29 31 A16 16 0 1 1 61 31 A16 16 0 1 1 29 31", "M45 47 L45 82"],
 	},
 	{
 		char: "ら",
@@ -209,7 +206,7 @@ export const glyphs: Glyph[] = [
 	},
 	{
 		char: "れ",
-		paths: ["M14 16 L76 16 L45 58 Z", "M45 58 L45 82", "M45 82 L70 56"],
+		paths: ["M14 16 L76 16 L45 45 Z", "M45 45 L45 82", "M45 82 L72 48"],
 	},
 	{
 		char: "ろ",
