@@ -1,5 +1,6 @@
 import { useId, useMemo, useRef, useState } from "react";
 import { toTokens, unsupportedChars } from "../lib/convert";
+import { DownloadButtons } from "./DownloadButtons";
 import { HunterCanvas } from "./HunterCanvas";
 
 const SAMPLE_TEXT = "はんたーもじへ、ようこそ。";
@@ -36,6 +37,11 @@ export function KanaToHunterView() {
 				title="変換したハンター文字"
 				emptyMessage="ここに変換結果が出ます。"
 				svgRef={svgRef}
+			/>
+			<DownloadButtons
+				svgRef={svgRef}
+				fileName="hunter-moji"
+				disabled={tokens.length === 0}
 			/>
 		</section>
 	);
