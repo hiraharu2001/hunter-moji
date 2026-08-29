@@ -5,7 +5,9 @@
 	--text: #1f2328;
 	--muted: #5c6169;
 	--accent: #2f6f4f;
+	--accent-weak: #e4efe8;
 	--warning: #b3261e;
+	--warning-bg: #fdecea;
 
 	color-scheme: light;
 	font-family: system-ui, "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -28,4 +30,219 @@ body {
 	max-width: 960px;
 	margin: 0 auto;
 	padding: 24px 16px 64px;
+}
+
+.app__title {
+	margin: 0;
+	font-size: 1.6rem;
+}
+
+.app__lead,
+.view__lead,
+.view__note {
+	margin: 4px 0 0;
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.app__footer {
+	margin-top: 48px;
+	color: var(--muted);
+	font-size: 0.8rem;
+}
+
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 24px 0;
+}
+
+.tabs__button {
+	padding: 8px 16px;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: var(--surface);
+	color: var(--text);
+	font: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.tabs__button--active {
+	border-color: var(--accent);
+	background: var(--accent-weak);
+	color: var(--accent);
+	font-weight: 700;
+}
+
+.view {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.view__title {
+	margin: 0;
+	font-size: 1.2rem;
+}
+
+.view__subtitle {
+	margin: 16px 0 0;
+	font-size: 1rem;
+}
+
+.field__label {
+	font-size: 0.9rem;
+	color: var(--muted);
+}
+
+.field__textarea {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+	color: inherit;
+	font: inherit;
+	resize: vertical;
+}
+
+.warning {
+	margin: 0;
+	padding: 8px 12px;
+	border-left: 4px solid var(--warning);
+	background: var(--warning-bg);
+	color: var(--warning);
+	font-size: 0.9rem;
+}
+
+.warning__chars {
+	margin-right: 4px;
+	font-weight: 700;
+}
+
+.canvas {
+	padding: 16px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+	overflow-x: auto;
+}
+
+.canvas__svg {
+	display: block;
+	color: var(--text);
+	max-width: 100%;
+	height: auto;
+}
+
+.canvas__empty {
+	margin: 0;
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.result {
+	display: block;
+	padding: 12px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+	font-size: 1.2rem;
+	word-break: break-all;
+}
+
+.palette,
+.chart {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.palette__row,
+.chart__row {
+	display: grid;
+	grid-template-columns: 3.5rem repeat(5, minmax(0, 1fr));
+	gap: 4px;
+	align-items: center;
+}
+
+.chart--flow {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 4px;
+}
+
+.palette__label,
+.chart__label {
+	color: var(--muted);
+	font-size: 0.8rem;
+}
+
+.palette__button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 4px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+	color: var(--text);
+	font: inherit;
+	cursor: pointer;
+}
+
+.palette__button:hover {
+	border-color: var(--accent);
+	background: var(--accent-weak);
+}
+
+.palette__kana {
+	color: var(--muted);
+	font-size: 0.75rem;
+}
+
+.chart__cell {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0;
+	padding: 4px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+}
+
+.chart__caption {
+	color: var(--muted);
+	font-size: 0.75rem;
+}
+
+.glyph-tile {
+	display: block;
+	color: var(--text);
+}
+
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.controls__button {
+	padding: 8px 12px;
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	background: var(--surface);
+	color: var(--text);
+	font: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+
+.controls__button:disabled {
+	color: var(--muted);
+	cursor: not-allowed;
+	opacity: 0.5;
 }
