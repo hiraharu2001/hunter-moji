@@ -1,0 +1,110 @@
+import {
+	BASE_TO_SMALL,
+	composeDiacritic,
+	DAKUTEN_TO_BASE,
+	HANDAKUTEN_TO_BASE,
+	isBaseChar,
+	SMALL_TO_BASE,
+} from "./kana";
+import { glyphToken, type HunterToken } from "./tokens";
+
+// ja: 全角カタカナ 1 文字をひらがなへ変換する。ヵ/ヶ は対応する小書きひらがな（ゕ/ゖ）を
+// パレットで扱っていないため、通常の か/け に寄せる。
+function katakanaToHiragana(char: string): string {
+	if (char === "ヵ") {
+		return "か";
+	}
+	if (char === "ヶ") {
+		return "け";
+	}
+	const code = char.codePointAt(0);
+	if (code !== undefined && code >= 0x30a1 && code <= 0x30f6) {
+		return String.fromCodePoint(code - 0x60);
+	}
+	return char;
+}
+
+// ja: 表記ゆれを吸収する。半角カタカナは NFKC で全角へ寄せつつ濁点・半濁点を 1
+// 文字に合成し、そのうえで全角カタカナをひらがなへ変換する。合成用の濁点（U+3099）
+// も同じ正規化で濁音 1 文字にまとまる。
+export function normalizeKana(input: string): string {
+	const normalized = input
+		.normalize("NFKC")
+		.replace(/\r\n?/g, "\n")
+		.replace(/[　\t]/g, " ")
+		.replace(/\?/g, "？")
+		.replace(/!/g, "！");
+	return Array.from(normalized, katakanaToHiragana).join("");
+}
+
+// ja: ひらがな列をハンター文字のトークン列へ分解する。未対応文字も落とさず持ち回る。
+export function toTokens(input: string): HunterToken[] {
+	const tokens: HunterToken[] = [];
+	for (const char of normalizeKana(input)) {
+		tokens.push(toToken(char));
+	}
+	return tokens;
+}
+
+function toToken(char: string): HunterToken {
+	if (char === "\n") {
+		return { kind: "newline" };
+	}
+	if (char === " ") {
+		return { kind: "space" };
+	}
+
+	const small = SMALL_TO_BASE[char];
+	if (small !== undefined) {
+		return glyphToken(small, { small: true });
+	}
+
+	const dakuten = DAKUTEN_TO_BASE[char];
+	if (dakuten !== undefined) {
+		return glyphToken(dakuten, { diacritic: "dakuten" });
+	}
+
+	const handakuten = HANDAKUTEN_TO_BASE[char];
+	if (handakuten !== undefined) {
+		return glyphToken(handakuten, { diacritic: "handakuten" });
+	}
+
+	if (isBaseChar(char)) {
+		return glyphToken(char);
+	}
+
+	return { kind: "unsupported", char };
+}
+
+// ja: トークン 1 個をひらがな（または元の未対応文字）へ戻す。
+export function tokenToKana(token: HunterToken): string {
+	switch (token.kind) {
+		case "glyph": {
+			if (token.small) {
+				return BASE_TO_SMALL[token.base] ?? token.base;
+			}
+			if (token.diacritic !== null) {
+				return composeDiacritic(token.base, token.diacritic) ?? token.base;
+			}
+			return token.base;
+		}
+		case "space":
+			return " ";
+		case "newline":
+			return "\n";
+		case "unsupported":
+			return token.char;
+	}
+}
+
+export function tokensToKana(tokens: readonly HunterToken[]): string {
+	return tokens.map(tokenToKana).join("");
+}
+
+// ja: 未対応文字を重複なく、出現順に返す。警告表示に使う。
+export function unsupportedChars(tokens: readonly HunterToken[]): string[] {
+	const chars = tokens.flatMap((token) =>
+		token.kind === "unsupported" ? [token.char] : [],
+	);
+	return [...new Set(chars)];
+}
