@@ -50,13 +50,17 @@
 
 body {
 	margin: 0;
+	/* ja: dvh 未対応ブラウザ向けのフォールバックを先に書き、対応ブラウザでは dvh を優先させる。 */
 	min-height: 100vh;
+	/* biome-ignore lint/suspicious/noDuplicateProperties: 100vh はフォールバックで意図的に上書きする */
+	min-height: 100dvh;
 }
 
 .app {
 	max-width: 960px;
 	margin: 0 auto;
-	padding: 20px 12px 48px;
+	/* ja: iOS Safari の下部ツールバー・ホームインジケータに操作ボタンが隠れないよう、セーフエリア分を足す。 */
+	padding: 20px 12px max(96px, 64px + env(safe-area-inset-bottom));
 }
 
 .app__header {
@@ -396,7 +400,7 @@ body {
 /* ja: 広い画面では余白と行ラベルの列を元の広さに戻す。 */
 @media (min-width: 600px) {
 	.app {
-		padding: 28px 16px 64px;
+		padding: 28px 16px calc(64px + env(safe-area-inset-bottom));
 	}
 
 	.palette__row,
