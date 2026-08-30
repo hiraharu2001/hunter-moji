@@ -86,7 +86,15 @@ export const BASE_KANA: readonly string[] = GOJUON_ROWS.flatMap((row) =>
 );
 
 // ja: かな以外で字形を持つ記号。半角の「?」「!」は正規化で全角へそろえる。
-export const PUNCTUATION: readonly string[] = ["ー", "、", "。", "？", "！"];
+// ja: 「×」はサブタイトルの区切り記号として使われる用法だけを対象にする。
+export const PUNCTUATION: readonly string[] = [
+	"ー",
+	"、",
+	"。",
+	"？",
+	"！",
+	"×",
+];
 
 export const BASE_CHARS: readonly string[] = [...BASE_KANA, ...PUNCTUATION];
 

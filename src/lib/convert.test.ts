@@ -117,9 +117,17 @@ describe("カタカナ入力", () => {
 			glyphToken("う", { diacritic: "dakuten" }),
 		]);
 	});
+});
 
-	it("漢字・カタカナと未対応の記号が混ざっていても未対応文字だけを残す", () => {
-		expect(unsupportedChars(toTokens("タビダチ×ト×ナカマタチ"))).toEqual(["×"]);
+describe("区切り記号「×」", () => {
+	it("×はサブタイトルの区切りとしてそのまま変換され、未対応文字にならない", () => {
+		expect(unsupportedChars(toTokens("タビダチ×ト×ナカマタチ"))).toEqual([]);
+	});
+
+	it("×を含む文字列も全文が往復で一致する", () => {
+		const source = "タビダチ×ト×ナカマタチ";
+
+		expect(tokensToKana(toTokens(source))).toBe(normalizeKana(source));
 	});
 });
 
