@@ -1,12 +1,19 @@
 import { useId, useMemo, useRef, useState } from "react";
 import { toTokens, unsupportedChars } from "../lib/convert";
-import { DownloadButtons } from "./DownloadButtons";
+import { parseHash } from "../lib/share";
 import { HunterCanvas } from "./HunterCanvas";
+import { ResultActions } from "./ResultActions";
 
 const SAMPLE_TEXT = "はんたーもじへ、ようこそ。";
 
+// ja: 共有リンクで開いたときは、その本文を初期値にする。
+function initialText(): string {
+	const shared = parseHash(window.location.hash).text;
+	return shared === "" ? SAMPLE_TEXT : shared;
+}
+
 export function KanaToHunterView() {
-	const [text, setText] = useState(SAMPLE_TEXT);
+	const [text, setText] = useState(initialText);
 	const inputId = useId();
 	const svgRef = useRef<SVGSVGElement>(null);
 	const tokens = useMemo(() => toTokens(text), [text]);
@@ -38,9 +45,11 @@ export function KanaToHunterView() {
 				emptyMessage="ここに変換結果が出ます。"
 				svgRef={svgRef}
 			/>
-			<DownloadButtons
+			<ResultActions
 				svgRef={svgRef}
 				fileName="hunter-moji"
+				tab="to-hunter"
+				text={text}
 				disabled={tokens.length === 0}
 			/>
 		</section>
