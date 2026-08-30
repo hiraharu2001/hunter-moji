@@ -75,7 +75,7 @@ function UnsupportedCell({ char }: { char: string }) {
 			dominantBaseline="central"
 			fontFamily="system-ui, sans-serif"
 			fontSize="64"
-			fill="#b3261e"
+			fill="#9c3218"
 		>
 			{char}
 		</text>

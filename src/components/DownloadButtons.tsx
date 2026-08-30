@@ -7,8 +7,8 @@ import {
 } from "../lib/download";
 
 // ja: 明るい背景に濃い線で書き出す。画面のテーマに関係なく同じ絵にするため固定値にする。
-const EXPORT_COLOR = "#1f2328";
-const EXPORT_BACKGROUND = "#ffffff";
+const EXPORT_COLOR = "#3b2f1e";
+const EXPORT_BACKGROUND = "#fbf6e9";
 // ja: 画面の 2 倍で描いて、拡大しても線が粗くならないようにする。
 const PNG_SCALE = 2;
 
