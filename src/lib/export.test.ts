@@ -28,13 +28,13 @@ describe("buildExportSvg", () => {
 	it("透かしが収まるよう横幅に下限を設ける", () => {
 		const image = buildExportSvg(content, { width: 56, height: 56 });
 
-		expect(image.width).toBe(260);
+		expect(image.width).toBe(330);
 	});
 
 	it("横幅が下限まで広がったら内容を中央へ寄せる", () => {
 		const { markup } = buildExportSvg(content, { width: 56, height: 56 });
 
-		expect(markup).toContain('<g transform="translate(102 16)">');
+		expect(markup).toContain('<g transform="translate(137 16)">');
 	});
 
 	it("内容をそのまま余白の内側へ置く", () => {
@@ -47,10 +47,19 @@ describe("buildExportSvg", () => {
 		const { markup } = buildExportSvg(content, { width: 400, height: 100 });
 		const text = markup.slice(markup.indexOf("<text"));
 
-		expect(text).toContain("hiraharu2001.github.io/hunter-moji");
+		expect(text).toContain("https://hiraharu2001.github.io/hunter-moji/");
 		expect(attribute(text, "fill")).toBe("#a89571");
 		expect(attribute(text, "text-anchor")).toBe("end");
 		expect(attribute(text, "x")).toBe("416");
+	});
+
+	it("透かしを SVG リンクにして、クリックでサイトへ飛べるようにする", () => {
+		const { markup } = buildExportSvg(content, { width: 400, height: 100 });
+
+		expect(markup).toContain(
+			'<a href="https://hiraharu2001.github.io/hunter-moji/"><text',
+		);
+		expect(markup).toContain("</text></a>");
 	});
 
 	it("透かしは内容より下の帯に置く", () => {

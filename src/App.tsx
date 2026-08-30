@@ -1,6 +1,7 @@
 import { ChartView } from "./components/ChartView";
 import { HunterToKanaView } from "./components/HunterToKanaView";
 import { KanaToHunterView } from "./components/KanaToHunterView";
+import { TitleView } from "./components/TitleView";
 import { TABS, useHashRoute } from "./hooks/useHashRoute";
 
 export default function App() {
@@ -52,6 +53,7 @@ export default function App() {
 				))}
 			</nav>
 			<main>
+				{tab === "title" && <TitleView />}
 				{tab === "to-hunter" && <KanaToHunterView />}
 				{tab === "to-kana" && <HunterToKanaView />}
 				{tab === "chart" && <ChartView />}
