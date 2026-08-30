@@ -28,7 +28,7 @@ COREPACK_HOME="$TMPDIR/corepack" corepack pnpm <script>
 
 **ドメイン**: ハンター文字はかなへの単純置換暗号。ひらがなとカタカナは同じ字形に対応する（`src/lib/kana.ts`）。
 
-**データフロー**: 入力文字列 → `normalizeKana`（NFKC 正規化・カタカナ→ひらがな、`src/lib/convert.ts`）→ `toTokens` でトークン列（`glyph` / `space` / `newline` / `unsupported`、`src/lib/tokens.ts`）→ `HunterCanvas` が `layoutTokens`（`src/lib/layout.ts`）で折り返し座標を計算し、1 枚の SVG に `GlyphShape` を配置する。逆変換（ハンター文字 → かな）は `tokenToKana` / `tokensToKana` が担い、パレット入力の編集操作（濁点・半濁点・小書きの付け外し、1 字削除）は `src/lib/compose.ts` にある。この「純粋関数は `src/lib/`、React は描画と状態管理のみ」という分離が要点で、`src/lib/*.test.ts` がロジックを検証する。
+**データフロー**: 入力文字列 → `normalizeKana`（NFKC 正規化・カタカナ→ひらがな、`src/lib/convert.ts`）→ `toTokens` でトークン列（`glyph` / `space` / `newline` / `unsupported`、`src/lib/tokens.ts`）→ `HunterCanvas` が `layoutTokens`（`src/lib/layout.ts`）で折り返し座標を計算し、1 枚の SVG に `GlyphShape` を配置する。`TitleCanvas`（`#/title`）はこれとは別に、入力を `normalizeTitle`（`src/lib/title.ts`）でカタカナ（長音・小書き・濁点半濁点付きを含む）と「×」だけへ絞り込んでから `toTokens` へ渡し、`layoutTitle`（同ファイル）でタイトル行とグリフ行をそれぞれ中央揃えした座標を計算する。逆変換（ハンター文字 → かな）は `tokenToKana` / `tokensToKana` が担い、パレット入力の編集操作（濁点・半濁点・小書きの付け外し、1 字削除）は `src/lib/compose.ts` にある。この「純粋関数は `src/lib/`、React は描画と状態管理のみ」という分離が要点で、`src/lib/*.test.ts` がロジックを検証する。
 
 **画像の書き出し**: `src/lib/export.ts` の `buildExportSvg` が、画面の SVG の中身に余白・背景・右下の透かしを足した SVG 文字列を組み立てる。PNG はこの同じ文字列を canvas でラスタライズして作るので、SVG と PNG の見た目は構造的に一致する。書き出し先では CSS 変数も webfont も解決できないため、色は直値、字体は総称ファミリで属性に持たせる。透かしが収まるよう横幅には下限があり、内容が狭いときは中央へ寄せる。純粋関数はここまでで、`ClipboardItem` と `navigator.share` の呼び出しは `src/lib/clipboard.ts` に分けてテストの対象外にする。Safari はユーザー操作と同じタスクでの `clipboard.write` しか許さないため、blob は await せず Promise のまま `ClipboardItem` へ渡す（この制約が `svgToPng` が Promise を返すだけで await しない理由）。
 
@@ -38,7 +38,7 @@ COREPACK_HOME="$TMPDIR/corepack" corepack pnpm <script>
 
 **濁点・半濁点の合成**: データは基字＋マーク（`dakutenGlyph` / `handakutenGlyph`）で持ち、`GlyphShape` が重ねて描画する（濁音ごとの独立グリフは持たない）。`DAKUTEN_TO_BASE` / `HANDAKUTEN_TO_BASE` / `SMALL_TO_BASE` の分解表を `kana.ts` に 1 本だけ持ち、`BASE_TO_*` はこれを `invert()` で反転して生成するので、往復変換が構造的に一致する。
 
-**ルーティング**: hash ルート（`#/to-hunter` `#/to-kana` `#/chart`）を `useHashRoute`（`useSyncExternalStore` で `hashchange` を購読）で扱う。GitHub Pages のリロード 404 を避けるため BrowserRouter は使わない。共有リンクは同じ hash に本文を載せた `#/to-hunter?t=<本文>` で、解釈は `src/lib/share.ts` の `parseHash` に集約する（クエリ付きでも画面を取り違えないため）。本文の hash は入力のたびには書かず、`リンク` を押したときだけ組み立てる。
+**ルーティング**: hash ルート（`#/title` `#/to-hunter` `#/to-kana` `#/chart`）を `useHashRoute`（`useSyncExternalStore` で `hashchange` を購読）で扱う。`TABS` の並びがそのままタブの表示順で、既定タブ（hash が無い・知らない画面のときに開く画面）は `useHashRoute.ts` の `DEFAULT_TAB`（`"title"`）。GitHub Pages のリロード 404 を避けるため BrowserRouter は使わない。共有リンクは同じ hash に本文を載せた `#/to-hunter?t=<本文>` で、解釈は `src/lib/share.ts` の `parseHash` に集約する（クエリ付きでも画面を取り違えないため）。`#/title` も同じ `t` クエリでタイトルを載せ、`#/title?t=<タイトル>` になる。本文の hash は入力のたびには書かず、`リンク` を押したときだけ組み立てる。
 
 **デプロイ**: `vite.config.ts` の `base: '/hunter-moji/'` は Pages のパス。`.github/workflows/deploy.yml` が `main` への push で lint → test → build → Pages デプロイの順に実行する。`main` はブランチ保護（PR 必須・linear history 必須・force push 禁止）。
 
