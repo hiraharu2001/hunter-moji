@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useFlashMessage } from "../hooks/useFlashMessage";
+import { canCopyText, copyText } from "../lib/clipboard";
 import {
 	appendChar,
 	applyDiacritic,
@@ -18,8 +20,20 @@ type KanaScript = "hiragana" | "katakana";
 export function HunterToKanaView() {
 	const [tokens, setTokens] = useState<HunterToken[]>([]);
 	const [script, setScript] = useState<KanaScript>("hiragana");
+	const [message, flash] = useFlashMessage();
 	const kana = tokensToKana(tokens);
 	const displayedKana = script === "katakana" ? hiraganaToKatakana(kana) : kana;
+
+	const handleCopyKana = () => {
+		if (!canCopyText()) {
+			flash("このブラウザではコピーできません");
+			return;
+		}
+		copyText(displayedKana).then(
+			() => flash("よみをコピーしました"),
+			() => flash("コピーできませんでした"),
+		);
+	};
 
 	return (
 		<section className="view">
@@ -106,6 +120,17 @@ export function HunterToKanaView() {
 				>
 					カタカナ
 				</button>
+				<button
+					className="controls__button"
+					type="button"
+					disabled={kana === ""}
+					onClick={handleCopyKana}
+				>
+					よみをコピー
+				</button>
+				<span className="controls__status" aria-live="polite">
+					{message}
+				</span>
 			</div>
 			<output className="result">
 				{kana === "" ? "（まだ入力がありません）" : displayedKana}
