@@ -2,6 +2,8 @@
 
 かな（ひらがな・カタカナ）とハンター文字を相互に変換する静的 Web アプリ。ブラウザだけで動き、変換したハンター文字は SVG と PNG で保存できる。字形は [日本テレビ公式サイトの用語解説にあるハンター文字表](https://www.ntv.co.jp/hunterhunter/dictionary/index.html)を正本として作画し（[omniglot の対応表](https://www.omniglot.com/images/writing/hunter.gif)とも一致する）、清音 46 字・長音・記号を SVG パスとして持つ。
 
+公開サイト: [https://hiraharu2001.github.io/hunter-moji/](https://hiraharu2001.github.io/hunter-moji/)
+
 ## 使い方
 
 画面上部のタブで 3 つの画面を切り替える。タブは URL の hash（`#/to-hunter`、`#/to-kana`、`#/chart`）に対応するため、リロードしても表示は変わらない。
