@@ -1,19 +1,20 @@
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useSharedText } from "../hooks/useSharedText";
 import { toTokens, unsupportedChars } from "../lib/convert";
-import { parseHash } from "../lib/share";
 import { HunterCanvas } from "./HunterCanvas";
 import { ResultActions } from "./ResultActions";
 
 const SAMPLE_TEXT = "はんたーもじへ、ようこそ。";
 
-// ja: 共有リンクで開いたときは、その本文を初期値にする。
-function initialText(): string {
-	const shared = parseHash(window.location.hash).text;
-	return shared === "" ? SAMPLE_TEXT : shared;
-}
-
 export function KanaToHunterView() {
-	const [text, setText] = useState(initialText);
+	const shared = useSharedText();
+	// ja: 共有リンクで開いたときは、その本文を入力欄に入れる。
+	const [text, setText] = useState(shared === "" ? SAMPLE_TEXT : shared);
+	useEffect(() => {
+		if (shared !== "") {
+			setText(shared);
+		}
+	}, [shared]);
 	const inputId = useId();
 	const svgRef = useRef<SVGSVGElement>(null);
 	const tokens = useMemo(() => toTokens(text), [text]);

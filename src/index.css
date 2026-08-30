@@ -265,9 +265,10 @@ body {
 	grid-template-columns: 2.2rem repeat(6, minmax(0, 1fr));
 }
 
+/* ja: 行の区切りが無い一覧。マスの下限を清音の表とそろえ、入る数だけ横に並べる。 */
 .chart--flow {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
 	gap: 4px;
 }
 
