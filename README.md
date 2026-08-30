@@ -70,3 +70,7 @@ pnpm dev
 GitHub Pages で配信する。`main` への push で `.github/workflows/deploy.yml` が動き、lint → test → build の順に検査したうえで `dist` を Pages へデプロイする。
 
 公開 URL は `https://<user>.github.io/hunter-moji/` で、このパスは `vite.config.ts` の `base` と対応する。リポジトリ名を変えるときは `base` も合わせて変える。
+
+## ライセンス
+
+MIT ライセンス。詳細は [LICENSE](./LICENSE) を参照。
