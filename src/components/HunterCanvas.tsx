@@ -65,8 +65,8 @@ export function HunterCanvas({ tokens, title, emptyMessage, svgRef }: Props) {
 	);
 }
 
-// ja: 未対応文字は元の文字のまま、警告色で置く。
-function UnsupportedCell({ char }: { char: string }) {
+// ja: 未対応文字は元の文字のまま、警告色で置く。TitleCanvas とも共有する。
+export function UnsupportedCell({ char }: { char: string }) {
 	return (
 		<text
 			x="50"

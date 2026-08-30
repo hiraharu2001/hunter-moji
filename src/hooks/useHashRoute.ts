@@ -3,6 +3,7 @@ import { parseHash } from "../lib/share";
 
 // ja: GitHub Pages でリロードしても 404 にならないよう、画面の切り替えは hash だけで行う。
 export const TABS = [
+	{ id: "title", label: "タイトル風" },
 	{ id: "to-hunter", label: "かな → ハンター文字" },
 	{ id: "to-kana", label: "ハンター文字 → かな" },
 	{ id: "chart", label: "五十音対応表" },
@@ -10,7 +11,7 @@ export const TABS = [
 
 export type TabId = (typeof TABS)[number]["id"];
 
-const DEFAULT_TAB: TabId = "to-hunter";
+const DEFAULT_TAB: TabId = "title";
 
 function subscribe(onChange: () => void): () => void {
 	window.addEventListener("hashchange", onChange);
