@@ -10,7 +10,9 @@ export default function App() {
 		<div className="app">
 			<header className="app__header">
 				<h1 className="app__title">ハンター文字コンバーター</h1>
-				<p className="app__lead">ひらがなとハンター文字を相互に変換します。</p>
+				<p className="app__lead">
+					かな（ひらがな・カタカナ）とハンター文字を相互に変換します。
+				</p>
 			</header>
 			<nav className="tabs" aria-label="画面の切り替え">
 				{TABS.map((item) => (

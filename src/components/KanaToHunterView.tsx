@@ -14,22 +14,22 @@ export function KanaToHunterView() {
 
 	return (
 		<section className="view">
-			<h2 className="view__title">ひらがな → ハンター文字</h2>
+			<h2 className="view__title">かな → ハンター文字</h2>
 			<label className="field__label" htmlFor={inputId}>
-				ひらがなを入力すると、その場でハンター文字になります。
+				ひらがな・カタカナを入力すると、その場でハンター文字になります。
 			</label>
 			<textarea
 				className="field__textarea"
 				id={inputId}
 				rows={3}
 				value={text}
-				placeholder="ひらがなで入力してください"
+				placeholder="ひらがな・カタカナで入力してください"
 				onChange={(event) => setText(event.target.value)}
 			/>
 			{unsupported.length > 0 && (
 				<p className="warning" role="alert">
 					<span className="warning__chars">{unsupported.join(" ")}</span>
-					は対応していません。ひらがなに直してください。
+					は対応していません。ひらがな・カタカナに直してください。
 				</p>
 			)}
 			<HunterCanvas

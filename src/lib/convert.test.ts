@@ -24,6 +24,26 @@ describe("normalizeKana", () => {
 	it("全角スペースとタブを半角スペースに、CRLF を改行にそろえる", () => {
 		expect(normalizeKana("あ　い\tう\r\nえ")).toBe("あ い う\nえ");
 	});
+
+	it("全角カタカナをひらがなへ変換する", () => {
+		expect(normalizeKana("ハンターモジ")).toBe("はんたーもじ");
+	});
+
+	it("半角カタカナを全角へ寄せたうえでひらがなへ変換する", () => {
+		expect(normalizeKana("ﾊﾝﾀｰ")).toBe("はんたー");
+	});
+
+	it("半角カタカナの濁点・半濁点を 1 文字に合成してからひらがなへ変換する", () => {
+		expect(normalizeKana("ﾊﾞ")).toBe("ば");
+	});
+
+	it("ヴはゔへ変換する", () => {
+		expect(normalizeKana("ヴ")).toBe("ゔ");
+	});
+
+	it("ヵ・ヶは小書きひらがなが無いため、か・けへ寄せる", () => {
+		expect(normalizeKana("ヵヶ")).toBe("かけ");
+	});
 });
 
 describe("toTokens", () => {
@@ -68,12 +88,38 @@ describe("toTokens", () => {
 		]);
 	});
 
-	it("漢字・カタカナ・英数字は未対応文字として残す", () => {
-		expect(toTokens("念ア1")).toEqual([
+	it("漢字・英数字は未対応文字として残す", () => {
+		expect(toTokens("念1")).toEqual([
 			{ kind: "unsupported", char: "念" },
-			{ kind: "unsupported", char: "ア" },
 			{ kind: "unsupported", char: "1" },
 		]);
+	});
+});
+
+describe("カタカナ入力", () => {
+	it("全角カタカナはひらがなと同じトークン列になる", () => {
+		expect(toTokens("ハンターモジ")).toEqual(toTokens("はんたーもじ"));
+	});
+
+	it("半角カタカナはひらがなと同じトークン列になる", () => {
+		expect(toTokens("ﾊﾝﾀｰ")).toEqual(toTokens("はんたー"));
+	});
+
+	it("拗音を含むカタカナは小書きトークンに分解する", () => {
+		expect(toTokens("キャラクター")).toEqual(toTokens("きゃらくたー"));
+		expect(toTokens("キャラクター")).toContainEqual(
+			glyphToken("や", { small: true }),
+		);
+	});
+
+	it("ヴは基字「う」に濁点を付けたトークンになる", () => {
+		expect(toTokens("ヴ")).toEqual([
+			glyphToken("う", { diacritic: "dakuten" }),
+		]);
+	});
+
+	it("漢字・カタカナと未対応の記号が混ざっていても未対応文字だけを残す", () => {
+		expect(unsupportedChars(toTokens("タビダチ×ト×ナカマタチ"))).toEqual(["×"]);
 	});
 });
 

@@ -8,14 +8,33 @@ import {
 } from "./kana";
 import { glyphToken, type HunterToken } from "./tokens";
 
-// ja: 表記ゆれを吸収する。合成用の濁点（U+3099）は NFC で濁音 1 文字にまとまる。
+// ja: 全角カタカナ 1 文字をひらがなへ変換する。ヵ/ヶ は対応する小書きひらがな（ゕ/ゖ）を
+// パレットで扱っていないため、通常の か/け に寄せる。
+function katakanaToHiragana(char: string): string {
+	if (char === "ヵ") {
+		return "か";
+	}
+	if (char === "ヶ") {
+		return "け";
+	}
+	const code = char.codePointAt(0);
+	if (code !== undefined && code >= 0x30a1 && code <= 0x30f6) {
+		return String.fromCodePoint(code - 0x60);
+	}
+	return char;
+}
+
+// ja: 表記ゆれを吸収する。半角カタカナは NFKC で全角へ寄せつつ濁点・半濁点を 1
+// 文字に合成し、そのうえで全角カタカナをひらがなへ変換する。合成用の濁点（U+3099）
+// も同じ正規化で濁音 1 文字にまとまる。
 export function normalizeKana(input: string): string {
-	return input
-		.normalize("NFC")
+	const normalized = input
+		.normalize("NFKC")
 		.replace(/\r\n?/g, "\n")
 		.replace(/[　\t]/g, " ")
 		.replace(/\?/g, "？")
 		.replace(/!/g, "！");
+	return Array.from(normalized, katakanaToHiragana).join("");
 }
 
 // ja: ひらがな列をハンター文字のトークン列へ分解する。未対応文字も落とさず持ち回る。

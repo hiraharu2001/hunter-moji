@@ -2,8 +2,8 @@ import { useCallback, useSyncExternalStore } from "react";
 
 // ja: GitHub Pages でリロードしても 404 にならないよう、画面の切り替えは hash だけで行う。
 export const TABS = [
-	{ id: "to-hunter", label: "ひらがな → ハンター文字" },
-	{ id: "to-kana", label: "ハンター文字 → ひらがな" },
+	{ id: "to-hunter", label: "かな → ハンター文字" },
+	{ id: "to-kana", label: "ハンター文字 → かな" },
 	{ id: "chart", label: "五十音対応表" },
 ] as const;
 

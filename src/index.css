@@ -246,3 +246,10 @@ body {
 	cursor: not-allowed;
 	opacity: 0.5;
 }
+
+.controls__button--active {
+	border-color: var(--accent);
+	background: var(--accent-weak);
+	color: var(--accent);
+	font-weight: 700;
+}

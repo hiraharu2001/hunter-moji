@@ -8,17 +8,22 @@ import {
 	toggleSmall,
 } from "../lib/compose";
 import { tokensToKana } from "../lib/convert";
+import { hiraganaToKatakana } from "../lib/kana";
 import type { HunterToken } from "../lib/tokens";
 import { GlyphPalette } from "./GlyphPalette";
 import { HunterCanvas } from "./HunterCanvas";
 
+type KanaScript = "hiragana" | "katakana";
+
 export function HunterToKanaView() {
 	const [tokens, setTokens] = useState<HunterToken[]>([]);
+	const [script, setScript] = useState<KanaScript>("hiragana");
 	const kana = tokensToKana(tokens);
+	const displayedKana = script === "katakana" ? hiraganaToKatakana(kana) : kana;
 
 	return (
 		<section className="view">
-			<h2 className="view__title">ハンター文字 → ひらがな</h2>
+			<h2 className="view__title">ハンター文字 → かな</h2>
 			<p className="view__lead">
 				パレットのハンター文字を押して入力します。濁点・半濁点・小書きは直前の 1
 				字に付きます。
@@ -76,8 +81,34 @@ export function HunterToKanaView() {
 				emptyMessage="パレットから文字を選んでください。"
 			/>
 			<h3 className="view__subtitle">よみ</h3>
+			<div className="controls">
+				<button
+					className={
+						script === "hiragana"
+							? "controls__button controls__button--active"
+							: "controls__button"
+					}
+					type="button"
+					aria-pressed={script === "hiragana"}
+					onClick={() => setScript("hiragana")}
+				>
+					ひらがな
+				</button>
+				<button
+					className={
+						script === "katakana"
+							? "controls__button controls__button--active"
+							: "controls__button"
+					}
+					type="button"
+					aria-pressed={script === "katakana"}
+					onClick={() => setScript("katakana")}
+				>
+					カタカナ
+				</button>
+			</div>
 			<output className="result">
-				{kana === "" ? "（まだ入力がありません）" : kana}
+				{kana === "" ? "（まだ入力がありません）" : displayedKana}
 			</output>
 		</section>
 	);

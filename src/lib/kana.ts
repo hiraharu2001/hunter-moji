@@ -105,3 +105,18 @@ export function composeDiacritic(
 		? BASE_TO_DAKUTEN[base]
 		: BASE_TO_HANDAKUTEN[base];
 }
+
+// ja: ひらがな 1 文字をカタカナへ変換する。「よみ」表示のカタカナ切替に使う。
+// ひらがな・カタカナのブロックは同じ並びでコードポイントが 0x60 ずれているため、
+// 対応の無い文字（空白・記号など）はそのまま返す。
+function hiraganaCharToKatakana(char: string): string {
+	const code = char.codePointAt(0);
+	if (code !== undefined && code >= 0x3041 && code <= 0x3096) {
+		return String.fromCodePoint(code + 0x60);
+	}
+	return char;
+}
+
+export function hiraganaToKatakana(input: string): string {
+	return Array.from(input, hiraganaCharToKatakana).join("");
+}
