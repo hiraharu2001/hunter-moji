@@ -1,10 +1,10 @@
 import { type RefObject, useState } from "react";
 import { useFlashMessage } from "../hooks/useFlashMessage";
 import type { TabId } from "../hooks/useHashRoute";
+import { resolveResultActions } from "../lib/capabilities";
 import {
 	canCopyImage,
 	canCopyText,
-	canShareFiles,
 	copyImage,
 	copyText,
 	isAbort,
@@ -36,8 +36,8 @@ export function ResultActions({
 }: Props) {
 	const [message, flash] = useFlashMessage();
 	const [error, setError] = useState<string | null>(null);
-	// ja: 共有シートの有無は端末で決まるため、初回だけ調べて結果を持ち回る。
-	const [sharable] = useState(canShareFiles);
+	// ja: 使える操作はブラウザで決まるため、マウント時に一度だけ調べて持ち回る。
+	const [available] = useState(() => resolveResultActions(window));
 
 	// ja: ユーザー操作と同じタスクで PNG の生成を始め、await せずに Promise を返す。
 	const startRender = (): Promise<Blob> | null => {
@@ -81,14 +81,21 @@ export function ResultActions({
 		}
 	};
 
+	// ja: 画像を共有できない端末では共有リンクへ、リンクも作れなければ保存へ落とす。
 	const handleShareImage = () => {
 		const png = startRender();
 		if (png === null) {
 			return;
 		}
-		shareImage(png, `${fileName}.png`).then(
-			(shared) => {
-				if (!shared) {
+		const link = canBuildShareUrl(text)
+			? buildShareUrl(window.location.href, tab, text)
+			: null;
+		shareImage(png, `${fileName}.png`, link).then(
+			(result) => {
+				if (result === "url") {
+					flash("リンクを共有しました");
+				}
+				if (result === "unsupported") {
 					savePng(png, "共有できない形式のため保存しました");
 				}
 			},
@@ -131,7 +138,7 @@ export function ResultActions({
 				>
 					画像を保存
 				</button>
-				{sharable && (
+				{available.share && (
 					<button
 						className="controls__button"
 						type="button"
@@ -153,6 +160,11 @@ export function ResultActions({
 					{message}
 				</span>
 			</div>
+			{available.insecureNote && (
+				<p className="view__note">
+					HTTPS で開くと、画像のコピーと共有が使えます。
+				</p>
+			)}
 			{text.length > SHARE_TEXT_LIMIT && (
 				<p className="view__note">
 					本文が {SHARE_TEXT_LIMIT} 字を超えるため、共有リンクは作れません。
