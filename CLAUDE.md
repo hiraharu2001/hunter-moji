@@ -38,7 +38,7 @@ COREPACK_HOME="$TMPDIR/corepack" corepack pnpm <script>
 
 **濁点・半濁点の合成**: データは基字＋マーク（`dakutenGlyph` / `handakutenGlyph`）で持ち、`GlyphShape` が重ねて描画する（濁音ごとの独立グリフは持たない）。`DAKUTEN_TO_BASE` / `HANDAKUTEN_TO_BASE` / `SMALL_TO_BASE` の分解表を `kana.ts` に 1 本だけ持ち、`BASE_TO_*` はこれを `invert()` で反転して生成するので、往復変換が構造的に一致する。
 
-**ルーティング**: hash ルート（`#/to-hunter` `#/to-kana` `#/chart`）を `useHashRoute`（`useSyncExternalStore` で `hashchange` を購読）で扱う。GitHub Pages のリロード 404 を避けるため BrowserRouter は使わない。共有リンクは同じ hash に本文を載せた `#/to-hunter?t=<本文>` で、解釈は `src/lib/share.ts` の `parseHash` に集約する（クエリ付きでも画面を取り違えないため）。本文の hash は入力のたびには書かず、`リンクをコピー` を押したときだけ組み立てる。
+**ルーティング**: hash ルート（`#/to-hunter` `#/to-kana` `#/chart`）を `useHashRoute`（`useSyncExternalStore` で `hashchange` を購読）で扱う。GitHub Pages のリロード 404 を避けるため BrowserRouter は使わない。共有リンクは同じ hash に本文を載せた `#/to-hunter?t=<本文>` で、解釈は `src/lib/share.ts` の `parseHash` に集約する（クエリ付きでも画面を取り違えないため）。本文の hash は入力のたびには書かず、`リンク` を押したときだけ組み立てる。
 
 **デプロイ**: `vite.config.ts` の `base: '/hunter-moji/'` は Pages のパス。`.github/workflows/deploy.yml` が `main` への push で lint → test → build → Pages デプロイの順に実行する。`main` はブランチ保護（PR 必須・linear history 必須・force push 禁止）。
 

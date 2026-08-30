@@ -41,6 +41,23 @@ describe("resolveResultActions", () => {
 		).toBe(false);
 	});
 
+	it("共有が使えるときは画像の保存ボタンを出さない", () => {
+		expect(
+			resolveResultActions({ isSecureContext: true, navigator: { share } })
+				.saveImage,
+		).toBe(false);
+	});
+
+	it("共有が使えないときは画像の保存ボタンを出す", () => {
+		expect(
+			resolveResultActions({ isSecureContext: true, navigator: {} }).saveImage,
+		).toBe(true);
+		expect(
+			resolveResultActions({ isSecureContext: false, navigator: { share } })
+				.saveImage,
+		).toBe(true);
+	});
+
 	it("非セキュアコンテキストのときだけ案内を出す", () => {
 		expect(resolveResultActions({ isSecureContext: false }).insecureNote).toBe(
 			true,

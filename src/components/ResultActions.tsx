@@ -26,7 +26,8 @@ type Props = {
 };
 
 // ja: 変換結果に対する操作をまとめる。主役は「画像をコピー」で、コピーできない
-// ブラウザでは同じ画像の保存へ落とす。
+// ブラウザでは同じ画像の保存へ落とす。成否はボタンより上に出す。スマホでは画面
+// 下端がブラウザのツールバーに隠れ、ボタンの下に出すと読めないため。
 export function ResultActions({
 	svgRef,
 	fileName,
@@ -121,6 +122,14 @@ export function ResultActions({
 
 	return (
 		<div className="actions">
+			{error !== null && (
+				<p className="warning" role="alert">
+					{error}
+				</p>
+			)}
+			<p className="status" aria-live="polite">
+				{message}
+			</p>
 			<div className="controls">
 				<button
 					className="controls__button controls__button--primary"
@@ -130,14 +139,16 @@ export function ResultActions({
 				>
 					画像をコピー
 				</button>
-				<button
-					className="controls__button"
-					type="button"
-					disabled={disabled}
-					onClick={handleSaveImage}
-				>
-					画像を保存
-				</button>
+				{available.saveImage && (
+					<button
+						className="controls__button"
+						type="button"
+						disabled={disabled}
+						onClick={handleSaveImage}
+					>
+						画像を保存
+					</button>
+				)}
 				{available.share && (
 					<button
 						className="controls__button"
@@ -151,14 +162,12 @@ export function ResultActions({
 				<button
 					className="controls__button"
 					type="button"
+					aria-label="共有リンクをコピー"
 					disabled={!canBuildShareUrl(text)}
 					onClick={handleCopyLink}
 				>
-					リンクをコピー
+					リンク
 				</button>
-				<span className="controls__status" aria-live="polite">
-					{message}
-				</span>
 			</div>
 			{available.insecureNote && (
 				<p className="view__note">
@@ -168,11 +177,6 @@ export function ResultActions({
 			{text.length > SHARE_TEXT_LIMIT && (
 				<p className="view__note">
 					本文が {SHARE_TEXT_LIMIT} 字を超えるため、共有リンクは作れません。
-				</p>
-			)}
-			{error !== null && (
-				<p className="warning" role="alert">
-					{error}
 				</p>
 			)}
 		</div>

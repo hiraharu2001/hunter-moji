@@ -95,6 +95,9 @@ export function HunterToKanaView() {
 				emptyMessage="パレットから文字を選んでください。"
 			/>
 			<h3 className="view__subtitle">よみ</h3>
+			<p className="status" aria-live="polite">
+				{message}
+			</p>
 			<div className="controls">
 				<button
 					className={
@@ -128,9 +131,6 @@ export function HunterToKanaView() {
 				>
 					よみをコピー
 				</button>
-				<span className="controls__status" aria-live="polite">
-					{message}
-				</span>
 			</div>
 			<output className="result">
 				{kana === "" ? "（まだ入力がありません）" : displayedKana}
