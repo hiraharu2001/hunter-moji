@@ -9,7 +9,7 @@ export default function App() {
 	return (
 		<div className="app">
 			<header className="app__header">
-				<div>
+				<div className="app__heading">
 					<h1 className="app__title">ハンター文字コンバーター</h1>
 					<p className="app__lead">
 						かな（ひらがな・カタカナ）とハンター文字を相互に変換します。
