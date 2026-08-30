@@ -5,7 +5,9 @@ const EXPORT_COLOR = "#3b2f1e";
 const EXPORT_BACKGROUND = "#fbf6e9";
 // ja: 出典の透かし。書き出した先では CSS 変数を解決できないため、画面の --faint と
 // 同じ色を直に書く。字体も webfont は読み込めないので総称ファミリだけにする。
-const WATERMARK_TEXT = "hiraharu2001.github.io/hunter-moji";
+// SVG として保存・共有したときはクリック可能なリンクにする（PNG はラスタなので
+// リンクにはならない）。
+const WATERMARK_TEXT = "https://hiraharu2001.github.io/hunter-moji/";
 const WATERMARK_COLOR = "#a89571";
 const WATERMARK_FONT = "system-ui, sans-serif";
 const WATERMARK_FONT_SIZE = 11;
@@ -13,7 +15,7 @@ const WATERMARK_FONT_SIZE = 11;
 const PADDING = 16;
 const FOOTER = 26;
 // ja: 1 文字だけ書き出したときに透かしがはみ出さないよう、横幅に下限を設ける。
-const MIN_WIDTH = 260;
+const MIN_WIDTH = 330;
 // ja: 画面の 2 倍で描いて、拡大しても線が粗くならないようにする。
 const PNG_SCALE = 2;
 
@@ -46,9 +48,11 @@ export function buildExportSvg(
 			`<rect x="0" y="0" width="${width}" height="${height}"`,
 			` fill="${EXPORT_BACKGROUND}"/>`,
 			`<g transform="translate(${offsetX} ${PADDING})">${content}</g>`,
+			`<a href="${WATERMARK_TEXT}">`,
 			`<text x="${width - PADDING}" y="${baseline}" text-anchor="end"`,
 			` font-family="${WATERMARK_FONT}" font-size="${WATERMARK_FONT_SIZE}"`,
 			` fill="${WATERMARK_COLOR}">${WATERMARK_TEXT}</text>`,
+			"</a>",
 			"</svg>",
 		].join(""),
 		width,
