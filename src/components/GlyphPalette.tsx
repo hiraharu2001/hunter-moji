@@ -31,7 +31,7 @@ export function GlyphPalette({ onSelect }: Props) {
 					)}
 				</div>
 			))}
-			<div className="palette__row">
+			<div className="palette__row palette__row--symbols">
 				<span className="palette__label">記号</span>
 				{PUNCTUATION.map((char) => (
 					<PaletteButton char={char} key={char} onSelect={onSelect} />

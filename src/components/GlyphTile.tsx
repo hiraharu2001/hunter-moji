@@ -4,6 +4,7 @@ import { GlyphShape } from "./GlyphShape";
 type Props = {
 	token: GlyphToken;
 	label: string;
+	// ja: 広い画面での一辺（px）。狭い画面ではマスの幅まで縮むので上限として使う。
 	size?: number;
 };
 
@@ -13,8 +14,7 @@ export function GlyphTile({ token, label, size = 48 }: Props) {
 		<svg
 			className="glyph-tile"
 			viewBox="0 0 100 100"
-			width={size}
-			height={size}
+			style={{ maxWidth: size }}
 			role="img"
 		>
 			<title>{label}</title>

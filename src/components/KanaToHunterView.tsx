@@ -1,12 +1,20 @@
-import { useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useSharedText } from "../hooks/useSharedText";
 import { toTokens, unsupportedChars } from "../lib/convert";
-import { DownloadButtons } from "./DownloadButtons";
 import { HunterCanvas } from "./HunterCanvas";
+import { ResultActions } from "./ResultActions";
 
 const SAMPLE_TEXT = "はんたーもじへ、ようこそ。";
 
 export function KanaToHunterView() {
-	const [text, setText] = useState(SAMPLE_TEXT);
+	const shared = useSharedText();
+	// ja: 共有リンクで開いたときは、その本文を入力欄に入れる。
+	const [text, setText] = useState(shared === "" ? SAMPLE_TEXT : shared);
+	useEffect(() => {
+		if (shared !== "") {
+			setText(shared);
+		}
+	}, [shared]);
 	const inputId = useId();
 	const svgRef = useRef<SVGSVGElement>(null);
 	const tokens = useMemo(() => toTokens(text), [text]);
@@ -38,9 +46,11 @@ export function KanaToHunterView() {
 				emptyMessage="ここに変換結果が出ます。"
 				svgRef={svgRef}
 			/>
-			<DownloadButtons
+			<ResultActions
 				svgRef={svgRef}
 				fileName="hunter-moji"
+				tab="to-hunter"
+				text={text}
 				disabled={tokens.length === 0}
 			/>
 		</section>

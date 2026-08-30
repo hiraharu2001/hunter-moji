@@ -50,13 +50,17 @@
 
 body {
 	margin: 0;
+	/* ja: dvh 未対応ブラウザ向けのフォールバックを先に書き、対応ブラウザでは dvh を優先させる。 */
 	min-height: 100vh;
+	/* biome-ignore lint/suspicious/noDuplicateProperties: 100vh はフォールバックで意図的に上書きする */
+	min-height: 100dvh;
 }
 
 .app {
 	max-width: 960px;
 	margin: 0 auto;
-	padding: 28px 16px 64px;
+	/* ja: iOS Safari の下部ツールバー・ホームインジケータに操作ボタンが隠れないよう、セーフエリア分を足す。 */
+	padding: 20px 12px max(96px, 64px + env(safe-area-inset-bottom));
 }
 
 .app__header {
@@ -69,7 +73,13 @@ body {
 	padding-bottom: 14px;
 }
 
+.app__heading {
+	flex: 1 1 12rem;
+	min-width: 0;
+}
+
 .app__github {
+	flex: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -95,7 +105,7 @@ body {
 	margin: 0;
 	font-family: "Shippori Mincho", serif;
 	font-weight: 700;
-	font-size: 1.7rem;
+	font-size: clamp(1.3rem, 5.5vw, 1.7rem);
 	letter-spacing: 0.06em;
 }
 
@@ -119,11 +129,13 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
-	margin: 22px 0;
+	margin: 18px 0;
 }
 
+/* ja: 指で押せるよう、タブと操作ボタンは高さ 44px を下回らせない。 */
 .tabs__button {
-	padding: 8px 18px;
+	min-height: 44px;
+	padding: 8px 16px;
 	border: 1px solid var(--border-control);
 	border-radius: 999px;
 	background: var(--surface);
@@ -173,6 +185,7 @@ body {
 
 .field__textarea {
 	width: 100%;
+	/* ja: font: inherit で 16px を保つ。これより小さいと iOS が入力時に拡大する。 */
 	padding: 12px 14px;
 	border: 1px solid var(--border-control);
 	border-radius: 6px;
@@ -203,7 +216,7 @@ body {
 }
 
 .canvas {
-	padding: 18px;
+	padding: clamp(10px, 3vw, 18px);
 	border: 4px double var(--border-strong);
 	border-radius: 6px;
 	background: var(--surface-canvas);
@@ -242,18 +255,25 @@ body {
 	gap: 5px;
 }
 
+/* ja: マスは幅を分け合って縮む。狭い画面では行ラベルの列と間隔を詰めて場所を空ける。 */
 .palette__row,
 .chart__row {
 	display: grid;
-	grid-template-columns: 3.2rem repeat(5, minmax(0, 1fr));
-	gap: 5px;
+	grid-template-columns: 2.2rem repeat(5, minmax(0, 1fr));
+	gap: 4px;
 	align-items: center;
 }
 
+/* ja: 記号は 6 字あるため、5 字の行と同じ列数だと 1 字がラベルの下へ回り込む。 */
+.palette__row--symbols {
+	grid-template-columns: 2.2rem repeat(6, minmax(0, 1fr));
+}
+
+/* ja: 行の区切りが無い一覧。マスの下限を清音の表とそろえ、入る数だけ横に並べる。 */
 .chart--flow {
-	display: flex;
-	flex-flow: row wrap;
-	gap: 5px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+	gap: 4px;
 }
 
 .palette__label,
@@ -267,6 +287,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	min-height: 44px;
 	padding: 5px 4px 3px;
 	border: 1px solid var(--border);
 	border-radius: 6px;
@@ -312,18 +333,30 @@ body {
 	font-size: 0.75rem;
 }
 
+/* ja: マスの幅まで縮み、広い画面では size プロップの max-width で止まる。 */
 .glyph-tile {
 	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
 	color: var(--text);
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .controls {
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
 	gap: 8px;
 }
 
 .controls__button {
+	min-height: 44px;
 	padding: 8px 14px;
 	border: 1px solid var(--border-control);
 	border-radius: 6px;
@@ -348,4 +381,39 @@ body {
 	background: var(--accent-weak);
 	color: var(--accent-dark);
 	font-weight: 700;
+}
+
+/* ja: その画面でいちばん使う操作。ここでは「画像をコピー」。 */
+.controls__button--primary {
+	border-color: var(--accent);
+	background: var(--accent);
+	color: var(--accent-contrast);
+	font-weight: 700;
+	box-shadow: 0 1px 3px rgba(61, 95, 59, 0.35);
+}
+
+.controls__status {
+	color: var(--accent-dark);
+	font-size: 0.85rem;
+}
+
+/* ja: 広い画面では余白と行ラベルの列を元の広さに戻す。 */
+@media (min-width: 600px) {
+	.app {
+		padding: 28px 16px calc(64px + env(safe-area-inset-bottom));
+	}
+
+	.palette__row,
+	.chart__row {
+		grid-template-columns: 3.2rem repeat(5, minmax(0, 1fr));
+		gap: 5px;
+	}
+
+	.palette__row--symbols {
+		grid-template-columns: 3.2rem repeat(6, minmax(0, 1fr));
+	}
+
+	.chart--flow {
+		gap: 5px;
+	}
 }
