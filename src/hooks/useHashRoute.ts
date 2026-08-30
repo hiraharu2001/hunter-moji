@@ -1,4 +1,5 @@
 import { useCallback, useSyncExternalStore } from "react";
+import { parseHash } from "../lib/share";
 
 // ja: GitHub Pages でリロードしても 404 にならないよう、画面の切り替えは hash だけで行う。
 export const TABS = [
@@ -16,9 +17,10 @@ function subscribe(onChange: () => void): () => void {
 	return () => window.removeEventListener("hashchange", onChange);
 }
 
+// ja: 共有リンク（"#/to-hunter?t=..."）でも画面を取り違えないよう、本文は parseHash に任せる。
 function readTab(): TabId {
-	const id = window.location.hash.replace(/^#\/?/, "");
-	return TABS.find((tab) => tab.id === id)?.id ?? DEFAULT_TAB;
+	const { path } = parseHash(window.location.hash);
+	return TABS.find((tab) => tab.id === path)?.id ?? DEFAULT_TAB;
 }
 
 export function useHashRoute(): [TabId, (tab: TabId) => void] {
