@@ -10,17 +10,18 @@ const SAMPLE_TITLE = "ハンターモジ×ヘ×ヨウコソ";
 export function TitleView() {
 	const shared = useSharedText();
 	// ja: 共有リンクで開いたときは、その本文を入力欄に入れる。
-	const [title, setTitle] = useState(
-		shared === "" ? SAMPLE_TITLE : normalizeTitle(shared),
-	);
+	const [text, setText] = useState(shared === "" ? SAMPLE_TITLE : shared);
 	useEffect(() => {
 		if (shared !== "") {
-			setTitle(normalizeTitle(shared));
+			setText(shared);
 		}
 	}, [shared]);
 
 	const inputId = useId();
 	const svgRef = useRef<SVGSVGElement>(null);
+	// ja: 正規化した値を入力欄へ書き戻すと IME の変換中に入力が重複するため、
+	// 入力は生のまま保持し、正規化は表示用の派生値としてだけ計算する。
+	const title = useMemo(() => normalizeTitle(text), [text]);
 	const tokens = useMemo(() => toTokens(title), [title]);
 
 	return (
@@ -37,9 +38,9 @@ export function TitleView() {
 				className="field__input"
 				id={inputId}
 				type="text"
-				value={title}
+				value={text}
 				placeholder="ハンターモジ×ヘ×ヨウコソ"
-				onChange={(event) => setTitle(normalizeTitle(event.target.value))}
+				onChange={(event) => setText(event.target.value)}
 			/>
 			<TitleCanvas
 				title={title}
